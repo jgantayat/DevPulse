@@ -1,0 +1,38 @@
+{
+  "posts": [
+    { "id": 1, "title": "Getting Started with Angular", "body": "Angular is a platform for building mobile and desktop web applications.", "userId": 1 },
+    { "id": 2, "title": "Understanding RxJS Observables", "body": "Observables are lazy push collections of multiple values over time.", "userId": 1 },
+    { "id": 3, "title": "HttpClient in Angular", "body": "HttpClient is the recommended way to communicate with a backend in Angular.", "userId": 2 },
+    { "id": 4, "title": "Reactive Forms Deep Dive", "body": "Reactive forms provide a model-driven approach to handling form inputs.", "userId": 2 },
+    { "id": 5, "title": "Angular Signals Explained", "body": "Signals are a new reactive primitive in Angular 17 for fine-grained reactivity.", "userId": 3 },
+    { "id": 6, "title": "switchMap vs mergeMap", "body": "switchMap cancels previous requests while mergeMap runs all of them simultaneously.", "userId": 3 },
+    { "id": 7, "title": "HTTP Interceptors Guide", "body": "Interceptors let you transform HTTP requests and responses at a central point.", "userId": 4 },
+    { "id": 8, "title": "Lazy Loading in Angular", "body": "Lazy loading splits your bundle so users only download code for the pages they visit.", "userId": 4 },
+    { "id": 9, "title": "forkJoin for Parallel Calls", "body": "forkJoin fires multiple observables simultaneously and emits once all complete.", "userId": 5 },
+    { "id": 10, "title": "takeUntilDestroyed Pattern", "body": "takeUntilDestroyed automatically completes subscriptions when a component is destroyed.", "userId": 5 }
+  ],
+  "users": [
+    { "id": 1, "name": "Jay Dev", "email": "jay@dev.com", "role": "admin" },
+    { "id": 2, "name": "Sara Chen", "email": "sara@dev.com", "role": "editor" },
+    { "id": 3, "name": "Arjun Nair", "email": "arjun@dev.com", "role": "editor" },
+    { "id": 4, "name": "Priya Menon", "email": "priya@dev.com", "role": "viewer" },
+    { "id": 5, "name": "Carlos Rivera", "email": "carlos@dev.com", "role": "viewer" },
+    { "id": 6, "name": "Mei Lin", "email": "mei@dev.com", "role": "editor" },
+    { "id": 7, "name": "Omar Hassan", "email": "omar@dev.com", "role": "viewer" },
+    { "id": 8, "name": "Aisha Patel", "email": "aisha@dev.com", "role": "admin" },
+    { "id": 9, "name": "Lucas Weber", "email": "lucas@dev.com", "role": "viewer" },
+    { "id": 10, "name": "Test User", "email": "test@user.com", "role": "viewer" }
+  ],
+  "todos": [
+    { "id": 1, "title": "Learn RxJS operators", "completed": true, "userId": 1 },
+    { "id": 2, "title": "Build the posts CRUD feature", "completed": true, "userId": 1 },
+    { "id": 3, "title": "Implement live search with switchMap", "completed": true, "userId": 2 },
+    { "id": 4, "title": "Set up HTTP interceptors", "completed": false, "userId": 2 },
+    { "id": 5, "title": "Refactor PostService to use signals", "completed": false, "userId": 3 },
+    { "id": 6, "title": "Add forkJoin to dashboard page", "completed": true, "userId": 3 },
+    { "id": 7, "title": "Fix memory leaks with takeUntilDestroyed", "completed": false, "userId": 4 },
+    { "id": 8, "title": "Integrate GitHub REST API", "completed": false, "userId": 4 },
+    { "id": 9, "title": "Add pagination to repo search", "completed": false, "userId": 5 },
+    { "id": 10, "title": "Deploy to GitHub Pages", "completed": false, "userId": 5 }
+  ]
+}
