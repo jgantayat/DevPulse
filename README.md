@@ -1,59 +1,88 @@
-# DevPulse
+# DevPulse Dashboard
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+A 10-day Angular learning project focused on `HttpClient`, RxJS operators, and Angular Signals. Built with Angular 21 standalone components — no `NgModule`, no UI library, no custom backend.
 
-## Development server
+## Tech Stack
 
-To start a local development server, run:
+| Layer | Technology |
+|---|---|
+| Framework | Angular 21 (standalone components, signals) |
+| HTTP | Angular `HttpClient` |
+| Reactivity | RxJS operators + Angular Signals |
+| Mock Backend | `json-server` (local REST from `db.json`) |
+| Real APIs | JSONPlaceholder, GitHub REST API v3 |
+| Forms | Reactive Forms |
+| Testing | Vitest (via Angular CLI) |
+| SSR | `@angular/ssr` + Express |
 
+## Getting Started
+
+**Terminal 1 — mock backend:**
 ```bash
-ng serve
+json-server --watch db.json --port 3000
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+**Terminal 2 — dev server:**
 ```bash
-ng generate component component-name
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Open `http://localhost:4200`.
+
+## Commands
 
 ```bash
-ng generate --help
+npm start          # dev server (http://localhost:4200)
+npm run build      # production build → dist/
+npm test           # run unit tests with Vitest
 ```
 
-## Building
+## 10-Day Roadmap
 
-To build the project run:
+| Day | Topic |
+|-----|-------|
+| 01 | Project setup + first HTTP GET |
+| 02 | CRUD operations + typed responses |
+| 03 | `map`, `tap`, `filter`, `catchError` |
+| 04 | `switchMap` + `debounceTime` (live search) |
+| 05 | `forkJoin` + `mergeMap` (parallel calls) |
+| 06 | `exhaustMap` + `takeUntilDestroyed` |
+| 07 | HTTP interceptors (auth + logging) |
+| 08 | Signals + `BehaviorSubject` state |
+| 09 | Real GitHub API + pagination |
+| 10 | Lazy loading + deploy |
 
-```bash
-ng build
+Per-day guides with code, concepts, and checkpoints are in `devpulse-plan/days/`.
+
+## Data Sources
+
+| Source | URL | Used for |
+|---|---|---|
+| `json-server` | `http://localhost:3000` | posts, users, todos CRUD (Days 1–8) |
+| JSONPlaceholder | `https://jsonplaceholder.typicode.com` | read-only fallback data |
+| GitHub REST API | `https://api.github.com` | repo search + pagination (Day 9) |
+
+API base URLs are configured in `src/environments/environment.ts`.
+
+## Project Structure
+
+```
+src/app/
+├── core/
+│   ├── models/         # TypeScript interfaces (Post, User, Todo, Repo)
+│   ├── services/       # HttpClient services
+│   └── interceptors/   # Auth + logging interceptors
+├── shared/
+│   └── components/     # LoadingSpinner, ErrorBanner, EmptyState
+├── features/
+│   ├── posts/          # Days 1–2: CRUD
+│   ├── users/          # Day 3: map + catchError
+│   ├── search/         # Day 4: switchMap + debounce
+│   ├── dashboard/      # Day 5: forkJoin
+│   └── github/         # Day 9: GitHub API + pagination
+└── layout/             # Shell (sidebar + header)
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Learning Log
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Daily reflections are tracked in `devpulse-plan/LEARNING_LOG.md`.
