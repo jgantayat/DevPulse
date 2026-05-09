@@ -1,9 +1,75 @@
-import { Component } from '@angular/core';
+import { Component,EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { Post } from '../../../core/models/post';
+import { PostService } from '../../../core/services/postservice';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-post-form',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './post-form.html',
   styleUrl: './post-form.css',
 })
-export class PostForm {}
+
+export class PostForm implements OnInit{
+
+  @Input() editPost : Post | null = null;
+  @Output() saved = new EventEmitter<void>();
+  @Output() cancelled = new EventEmitter<void>();
+
+
+  private fb= inject(FormBuilder);
+  private postService = inject(PostService);
+
+  isLoading = false;
+  errorMessage='';
+
+  form= this.fb.group({
+    title: ['', Validators.required, Validators.minLength(5)],
+    body: ['', Validators.required]
+    // userId: [1, Validators.required]
+  });
+
+  ngOnInit(): void {
+    if(this.editPost){
+      this.form.patchValue({
+        title: this.editPost.title,
+        body: this.editPost.body
+      });
+    }
+  }
+
+  onSubmit(){
+    if(this.form.invalid){
+      return;
+    }
+
+    const payload = {
+      title: this.form.value.title!,
+      body: this.form.value.body!,
+      userId: 1
+    };
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const calls = this.editPost
+      ? this.postService.updatePost(this.editPost.id, payload)
+      : this.postService.createPost(payload);
+
+    calls.subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.form.reset();
+        this.saved.emit();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = 'An error occurred while saving the post. Please try again.';
+        console.error('Error saving post:', err);
+      }
+    });
+
+  }
+
+}

@@ -1,4 +1,4 @@
-<div class="page-container">
+<!-- <div class="page-container">
   <h2>Posts</h2>
 
   @if (posts$ | async; as posts) {
@@ -13,5 +13,49 @@
     }
   } @else {
     <p>Loading posts...</p>
+  }
+</div> -->
+
+
+<div class="page-container">
+  <div class="page-header">
+    <h2>Posts</h2>
+    <button (click)="openCreatForm()">+ New Post</button>
+  </div>
+
+  @if (deleteError) {
+  <div class="error-banner">{{ deleteError }}</div>
+  }
+  @if (showForm) {
+  <app-post-form [editPost]="editingPost" (saved)="onFormSaved()" (cancelled)="showForm = false">
+  </app-post-form>
+  }
+
+  @if (posts$ | async; as posts){
+  <ng-container>
+
+    @if (posts.length === 0) {
+    <div>No posts yet.</div>
+    }
+
+    @for (post of posts; track post.id){
+    <div class="post-card">
+      <h3>{{ post.title }}</h3>
+      <p>{{ post.body }}</p>
+      <div class="post-actions">
+        <button (click)="openEditForm(post)">Edit</button>
+        <button (click)="onFormCancelled(post.id)" class="danger">Delete</button>
+      </div>
+    </div>
+    }
+    @empty {
+    <p>No posts available.</p>
+    }
+  </ng-container>
+  }
+  @else {
+  <ng-template #loading>
+    <p>Loading...</p>
+  </ng-template>
   }
 </div>
