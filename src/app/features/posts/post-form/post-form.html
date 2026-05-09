@@ -1,1 +1,40 @@
-<p>post-form works!</p>
+<div class="form-container">
+  <h3>{{ editPost ? 'Edit Post' : 'Create Post' }}</h3>
+
+
+  @if (errorMessage) {
+    <div class="error-banner">
+    {{ errorMessage }}
+  </div>
+  }
+  
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-field">
+      <label>Title</label>
+      <input formControlName="title" placeholder="Post title" />
+      @if (form.get('title')?.invalid && form.get('title')?.touched) {
+        <span class="field-error">
+          Title is required (min 5 chars)
+        </span>
+      }
+    </div>
+
+    <div class="form-field">
+      <label>Body</label>
+      <textarea formControlName="body" rows="4" placeholder="Post content"></textarea>
+      @if (form.get('body')?.invalid && form.get('body')?.touched) {
+        <span class="field-error">
+          Body is required
+        </span>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="cancelled.emit()">Cancel</button>
+      <button type="submit" [disabled]="form.invalid || isLoading">
+        {{ isLoading ? 'Saving...' : (editPost ? 'Update' : 'Create') }}
+      </button>
+    </div>
+  </form>
+</div>
