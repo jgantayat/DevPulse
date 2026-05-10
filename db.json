@@ -1,15 +1,59 @@
 {
-   "posts": [
-    { "id": 1, "title": "Getting Started with Angular", "body": "Angular is a platform for building mobile and desktop web applications.", "userId": 1 },
-    { "id": 2, "title": "Understanding RxJS Observables", "body": "Observables are lazy push collections of multiple values over time.", "userId": 1 },
-    { "id": 3, "title": "HttpClient in Angular", "body": "HttpClient is the recommended way to communicate with a backend in Angular.", "userId": 2 },
-    { "id": 4, "title": "Reactive Forms Deep Dive", "body": "Reactive forms provide a model-driven approach to handling form inputs.", "userId": 2 },
-    { "id": 5, "title": "Angular Signals Explained", "body": "Signals are a new reactive primitive in Angular 17 for fine-grained reactivity.", "userId": 3 },
-    { "id": 6, "title": "switchMap vs mergeMap", "body": "switchMap cancels previous requests while mergeMap runs all of them simultaneously.", "userId": 3 },
-    { "id": 7, "title": "HTTP Interceptors Guide", "body": "Interceptors let you transform HTTP requests and responses at a central point.", "userId": 4 },
-    { "id": 8, "title": "Lazy Loading in Angular", "body": "Lazy loading splits your bundle so users only download code for the pages they visit.", "userId": 4 },
-    { "id": 9, "title": "forkJoin for Parallel Calls", "body": "forkJoin fires multiple observables simultaneously and emits once all complete.", "userId": 5 },
-    { "id": 10, "title": "takeUntilDestroyed Pattern", "body": "takeUntilDestroyed automatically completes subscriptions when a component is destroyed.", "userId": 5 }
+  "posts": [
+    {
+      "id": "1",
+      "title": "Getting Started with Angular",
+      "body": "Angular is a platform for building mobile and desktop web applications.",
+      "userId": 1
+    },
+    {
+      "id": "3",
+      "title": "HttpClient in Angular",
+      "body": "HttpClient is the recommended way to communicate with a backend in Angular.",
+      "userId": 2
+    },
+    {
+      "id": "4",
+      "title": "Reactive Forms Deep Dive",
+      "body": "Reactive forms provide a model-driven approach to handling form inputs.",
+      "userId": 2
+    },
+    {
+      "id": "5",
+      "title": "Angular Signals Explained",
+      "body": "Signals are a new reactive primitive in Angular 17 for fine-grained reactivity.",
+      "userId": 3
+    },
+    {
+      "id": "6",
+      "title": "switchMap vs mergeMap",
+      "body": "switchMap cancels previous requests while mergeMap runs all of them simultaneously.",
+      "userId": 3
+    },
+    {
+      "id": "7",
+      "title": "HTTP Interceptors Guide",
+      "body": "Interceptors let you transform HTTP requests and responses at a central point.",
+      "userId": 4
+    },
+    {
+      "id": "8",
+      "title": "Lazy Loading in Angular",
+      "body": "Lazy loading splits your bundle so users only download code for the pages they visit.",
+      "userId": 4
+    },
+    {
+      "id": "9",
+      "title": "forkJoin for Parallel Calls",
+      "body": "forkJoin fires multiple observables simultaneously and emits once all complete.",
+      "userId": 5
+    },
+    {
+      "id": "10",
+      "title": "takeUntilDestroyed Pattern",
+      "body": "takeUntilDestroyed automatically completes subscriptions when a component is destroyed.",
+      "userId": 5
+    }
   ],
   "users": [
     {

@@ -1,38 +1,36 @@
-<div class="form-container">
-  <h3>{{ editPost ? 'Edit Post' : 'Create Post' }}</h3>
-
+<div class="p-2">
+  <h5 class="mb-3 pb-2 border-bottom">{{ editPost ? 'Edit Post' : 'New Post' }}</h5>
 
   @if (errorMessage) {
-    <div class="error-banner">
-    {{ errorMessage }}
-  </div>
+    <div class="alert alert-danger d-flex align-items-center mb-3" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      {{ errorMessage }}
+    </div>
   }
-  
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="form-field">
-      <label>Title</label>
-      <input formControlName="title" placeholder="Post title" />
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Title</label>
+      <input class="form-control" formControlName="title" placeholder="Post title" />
       @if (form.get('title')?.invalid && form.get('title')?.touched) {
-        <span class="field-error">
-          Title is required (min 5 chars)
-        </span>
+        <div class="text-danger small mt-1">Title is required (min 5 chars)</div>
       }
     </div>
 
-    <div class="form-field">
-      <label>Body</label>
-      <textarea formControlName="body" rows="4" placeholder="Post content"></textarea>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Body</label>
+      <textarea class="form-control" formControlName="body" rows="4" placeholder="Post content"></textarea>
       @if (form.get('body')?.invalid && form.get('body')?.touched) {
-        <span class="field-error">
-          Body is required
-        </span>
+        <div class="text-danger small mt-1">Body is required</div>
       }
     </div>
 
-    <div class="form-actions">
-      <button type="button" (click)="cancelled.emit()">Cancel</button>
-      <button type="submit" [disabled]="form.invalid || isLoading">
+    <div class="d-flex gap-2 justify-content-end">
+      <button type="button" class="btn btn-secondary" (click)="cancelled.emit()">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isLoading">
+        @if (isLoading) {
+          <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+        }
         {{ isLoading ? 'Saving...' : (editPost ? 'Update' : 'Create') }}
       </button>
     </div>
