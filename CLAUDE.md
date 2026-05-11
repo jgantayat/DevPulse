@@ -32,42 +32,44 @@ npm run serve:ssr:DevPulse
 
 **Angular 21 standalone app with SSR enabled** (Express + `@angular/ssr`). Every component and directive uses standalone APIs — no `NgModule`.
 
-### Planned folder structure (from `devpulse-plan/README.md`)
+### Folder structure
 
 ```
 src/app/
 ├── core/
-│   ├── models/         # TypeScript interfaces: Post, User, Todo, Repo
-│   ├── services/       # All HttpClient services
-│   └── interceptors/   # Auth + logging HTTP interceptors (Day 7)
+│   ├── models/         # TypeScript interfaces: Post, PostPayload, User, UserApiResponse
+│   ├── services/       # All HttpClient services (postservice.ts, userservice.ts)
+│   └── interceptors/   # Auth + logging HTTP interceptors (Day 7, not yet built)
 ├── shared/
-│   └── components/     # LoadingSpinner, ErrorBanner, EmptyState
+│   └── components/     # LoadingSpinner, ErrorBanner (scaffolded, not yet wired up)
 ├── features/
-│   ├── posts/          # Days 1–2: CRUD via json-server
-│   ├── users/          # Day 3: map + catchError
-│   ├── search/         # Day 4: switchMap + debounceTime
-│   ├── dashboard/      # Day 5: forkJoin parallel calls
-│   └── github/         # Day 9: GitHub REST API + pagination
-└── layout/             # Shell with sidebar + header
+│   ├── posts/          # Days 1–2: CRUD via json-server — PostList + PostForm
+│   ├── users/          # Day 3: map + catchError — UserList (scaffold)
+│   ├── search/         # Day 4: switchMap + debounceTime (planned)
+│   ├── dashboard/      # Day 5: forkJoin parallel calls (planned)
+│   └── github/         # Day 9: GitHub REST API + pagination (planned)
+└── layout/             # Shell with sidebar + header (planned)
 ```
 
 ### Data sources
 
 | Source | URL | Used for |
 |---|---|---|
-| `json-server` | `http://localhost:3000` | posts, users, todos CRUD |
+| `json-server` | `http://localhost:3000` | posts (14), users (10), todos (10) CRUD |
 | JSONPlaceholder | `https://jsonplaceholder.typicode.com` | read-only fallback data |
 | GitHub REST API | `https://api.github.com` | repo search + pagination (Day 9) |
 
-API base URLs go in `src/environments/environment.ts` as `apiUrl`, `jsonPlaceholderUrl`, `githubApiUrl`.
+API base URLs live in `src/environments/environment.development.ts` as `apiUrl`, `jsonPlaceholderUrl`, `githubApiUrl`. **Note**: services currently import `environment.development` directly — the convention to follow is importing from `environment` (Angular CLI swaps the file at build time).
 
 ### Key Angular patterns used in this project
 
+- **Naming**: Angular 17+ style — no `Component` suffix on class names (`PostList` not `PostListComponent`); files use no `.component.ts` suffix (`post-list.ts`, `postservice.ts`)
 - **Dependency injection**: use `inject()` function, not constructor injection
-- **HTTP**: `provideHttpClient()` in `app.config.ts`; services return `Observable<T>`, never converted to Promises
+- **HTTP**: `provideHttpClient(withFetch())` in `app.config.ts` — `withFetch()` is required for SSR compatibility; services return `Observable<T>`, never converted to Promises
+- **Models**: use a separate `*Payload` interface (e.g. `PostPayload`) for create/update requests that omit `id`; use a dual-model pattern for external APIs (`UserApiResponse` → trimmed `User`) with the mapping done in the service layer
 - **Templates**: prefer `async pipe` over manual `.subscribe()` to avoid memory leaks
 - **Reactivity**: Angular Signals (`signal()`, `computed()`) introduced in Day 8 alongside `BehaviorSubject`
-- **Routing**: all feature routes are lazy-loaded via `loadComponent`
+- **Routing**: eagerly loaded today; plan is to move to lazy-loaded routes via `loadComponent` as features grow
 - **Subscription cleanup**: `takeUntilDestroyed()` operator (Day 6+) instead of manual unsubscribe
 
 ### SSR note
