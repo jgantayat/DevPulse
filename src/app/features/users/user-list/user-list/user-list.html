@@ -1,1 +1,27 @@
-<p>user-list works!</p>
+<div class="page-container">
+    <h2>Users</h2>
+    @if (users | async; as userList) {
+
+    <ng-container>
+
+        @if (userList.length === 0) {
+        <div class="empty-state">
+            No users found.
+        </div>
+        }
+
+        @for (user of userList; track $index) {
+        <div class="user-card">
+            <div class="user-name">{{ user.name }}</div>
+            <div class="user-meta">{{ user.email }}</div>
+            <div class="user-meta">{{ user.city }} — {{ user.company }}</div>
+        </div>
+        }
+
+    </ng-container>
+    }
+    @else {
+    <p>Loading users...</p>
+    }
+
+</div>
