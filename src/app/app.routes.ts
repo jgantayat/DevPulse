@@ -7,6 +7,9 @@ export const routes: Routes = [
     },
     {
         path: 'posts', component: PostList
+    },
+    {
+        path: 'users', loadComponent: () => import('./features/users/user-list/user-list/user-list').then(m => m.UserList)
     }
     
 ];
