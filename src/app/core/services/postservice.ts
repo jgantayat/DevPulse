@@ -11,7 +11,7 @@ export class PostService {
 
   private httpClient = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/posts`;
-   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
    
   getAllPosts(): Observable<Post[]> {
