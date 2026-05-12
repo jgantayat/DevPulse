@@ -4,7 +4,7 @@ import { UserSearch } from './features/search/user-search/user-search/user-searc
 
 export const routes: Routes = [
     {
-        path: '', redirectTo: 'posts', pathMatch: 'full'
+        path: '', redirectTo: 'dashboard', pathMatch: 'full'
     },
     {
         path: 'posts', component: PostList
@@ -14,6 +14,10 @@ export const routes: Routes = [
     },
     {
         path: 'search', component: UserSearch
+    },
+    {
+        path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard/dashboard').then(m => m.DashboardComponent)
     }
+
     
 ];

@@ -1,8 +1,10 @@
-import { Component,EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { Post } from '../../../core/models/post';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { Post, PostPayload } from '../../../core/models/post';
 import { PostService } from '../../../core/services/postservice';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { exhaustMap, Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-post-form',
@@ -11,27 +13,54 @@ import { ReactiveFormsModule } from '@angular/forms';
   styleUrl: './post-form.css',
 })
 
-export class PostForm implements OnInit{
+export class PostForm implements OnInit {
 
-  @Input() editPost : Post | null = null;
+  @Input() editPost: Post | null = null;
   @Output() saved = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
 
 
-  private fb= inject(FormBuilder);
+  private fb = inject(FormBuilder);
   private postService = inject(PostService);
+  private submitTrigger = new Subject<PostPayload>();
 
   isLoading = false;
-  errorMessage='';
+  errorMessage = '';
 
-  form= this.fb.group({
+  form = this.fb.group({
     title: ['', Validators.required, Validators.minLength(5)],
     body: ['', Validators.required]
     // userId: [1, Validators.required]
   });
 
+  constructor(){
+    this.submitTrigger.pipe(
+      exhaustMap(payload =>{
+        this.isLoading = true;
+        this.errorMessage='';
+
+        const call = this.editPost
+        ? this.postService.updatePost(this.editPost.id, payload)
+        : this.postService.createPost(payload);
+
+        return call;
+      }),
+      takeUntilDestroyed()
+    ). subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.form.reset();
+        this.saved.emit();
+      },
+      error: (err)=>{
+        this.isLoading= false;
+        this.errorMessage = 'Failed to save, Please try again';
+      }
+    });
+  }
+
   ngOnInit(): void {
-    if(this.editPost){
+    if (this.editPost) {
       this.form.patchValue({
         title: this.editPost.title,
         body: this.editPost.body
@@ -39,8 +68,8 @@ export class PostForm implements OnInit{
     }
   }
 
-  onSubmit(){
-    if(this.form.invalid){
+  onSubmit() {
+    if (this.form.invalid) {
       return;
     }
 
