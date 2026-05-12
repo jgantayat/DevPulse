@@ -49,4 +49,22 @@ export class Userservice {
       })
     );
   }
+
+  searchUsers(query: string): Observable<User[]> {
+    return this.http.get<UserApiResponse[]>(this.usersApiUrl).pipe(
+      map(users =>
+        users.filter(u =>
+          u.name.toLowerCase().includes(query.toLowerCase()) ||
+          u.email.toLowerCase().includes(query.toLowerCase())
+        ).map(u => ({
+          id: u.id,
+          name: u.name,
+          email: u.email,
+          city: u.address.city,
+          company: u.company.name
+        }))
+      ),
+      catchError(() => of([]))
+    );
+  }
 }

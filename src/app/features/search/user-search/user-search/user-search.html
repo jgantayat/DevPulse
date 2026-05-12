@@ -1,0 +1,33 @@
+<div class="page-container">
+    <h2>User Search</h2>
+    <div class="search-bar">
+        <input [formControl]="searchControl" placeholder="Search by name or email..." class="search-input" />
+        @if (isSearching) {
+        <span class="searching-indicator">Searching...</span>
+        }
+    </div>
+
+    @if (searchResult | async; as users) {
+
+    <ng-container>
+        <p class="results-count">{{ users.length }} result(s)</p>
+        @if (users.length === 0 && !isSearching) {
+
+        <div class="empty-state">
+            No users match your search.
+        </div>
+        }
+        @for (user of users; track $index) {
+
+        <div class="user-card">
+            <div class="user-name">{{ user.name }}</div>
+            <div class="user-meta">{{ user.email }}</div>
+            <div class="user-meta">{{ user.city }} — {{ user.company }}</div>
+            <br>
+            <br>
+        </div>
+        }
+    </ng-container>
+
+    }
+</div>

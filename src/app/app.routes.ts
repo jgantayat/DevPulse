@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { PostList } from './features/posts/post-list/post-list';
+import { UserSearch } from './features/search/user-search/user-search/user-search';
 
 export const routes: Routes = [
     {
@@ -10,6 +11,9 @@ export const routes: Routes = [
     },
     {
         path: 'users', loadComponent: () => import('./features/users/user-list/user-list/user-list').then(m => m.UserList)
+    },
+    {
+        path: 'search', component: UserSearch
     }
     
 ];
