@@ -20,6 +20,9 @@ export class PostList {
   editingPost: Post | null = null;
   deleteError='';
 
+  constructor(){
+    
+  }
 
   openCreatForm(){
     this.editingPost = null;

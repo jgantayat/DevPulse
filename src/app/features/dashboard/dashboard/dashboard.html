@@ -1,0 +1,34 @@
+<div class="page-container">
+    <h2>Dashboard</h2>
+
+    @if (dashboardData | async; as data) {
+    <ng-container>
+        <div class="kpi-grid">
+
+            <div class="kpi-card">
+                <div class="kpi-value">{{ data.totalPosts }}</div>
+                <div class="kpi-label">Total Posts</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-value">{{ data.totalUsers }}</div>
+                <div class="kpi-label">Active Users</div>
+            </div>
+
+            <div class="kpi-card success">
+                <div class="kpi-value">{{ data.completedTodos }}</div>
+                <div class="kpi-label">Completed Todos</div>
+            </div>
+
+            <div class="kpi-card warning">
+                <div class="kpi-value">{{ data.pendingTodos }}</div>
+                <div class="kpi-label">Pending Todos</div>
+            </div>
+
+        </div>
+    </ng-container>
+    }
+    @else {
+    <p>Loading dashboard...</p>
+    }
+</div>
