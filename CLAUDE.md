@@ -37,40 +37,47 @@ npm run serve:ssr:DevPulse
 ```
 src/app/
 ├── core/
-│   ├── models/         # TypeScript interfaces: Post, PostPayload, User, UserApiResponse
-│   ├── services/       # All HttpClient services (postservice.ts, userservice.ts)
-│   └── interceptors/   # Auth + logging HTTP interceptors (Day 7, not yet built)
+│   ├── models/         # post.ts, user.ts, todo.ts (Post/PostPayload, User/UserApiResponse, Todo/DashboardData)
+│   └── services/       # postservice.ts, userservice.ts, dashboard.ts, todo.ts
 ├── shared/
-│   └── components/     # LoadingSpinner, ErrorBanner (scaffolded, not yet wired up)
+│   └── components/     # error-banner/, loading-spinner/ — scaffolded, not yet wired to real state
 ├── features/
-│   ├── posts/          # Days 1–2: CRUD via json-server — PostList + PostForm
-│   ├── users/          # Day 3: map + catchError — UserList (scaffold)
-│   ├── search/         # Day 4: switchMap + debounceTime (planned)
-│   ├── dashboard/      # Day 5: forkJoin parallel calls (planned)
-│   └── github/         # Day 9: GitHub REST API + pagination (planned)
-└── layout/             # Shell with sidebar + header (planned)
+│   ├── posts/          # Days 1–2: PostList + PostForm — CRUD via json-server (complete)
+│   ├── users/          # Day 3: UserList — map + catchError pipeline (complete)
+│   ├── search/         # Day 4: UserSearch — switchMap + debounceTime (complete)
+│   ├── dashboard/      # Day 5: Dashboard — forkJoin parallel calls + mergeMap per-user posts (complete)
+│   └── github/         # Day 9: GitHub REST API + pagination (not yet built)
+└── layout/             # Shell with sidebar + header (not yet built)
 ```
 
 ### Data sources
 
 | Source | URL | Used for |
 |---|---|---|
-| `json-server` | `http://localhost:3000` | posts (14), users (10), todos (10) CRUD |
-| JSONPlaceholder | `https://jsonplaceholder.typicode.com` | read-only fallback data |
+| `json-server` | `http://localhost:3000` | posts (CRUD), users (10), todos (10) |
+| JSONPlaceholder | `https://jsonplaceholder.typicode.com` | users + todos (read-only) |
 | GitHub REST API | `https://api.github.com` | repo search + pagination (Day 9) |
 
-API base URLs live in `src/environments/environment.development.ts` as `apiUrl`, `jsonPlaceholderUrl`, `githubApiUrl`. **Note**: services currently import `environment.development` directly — the convention to follow is importing from `environment` (Angular CLI swaps the file at build time).
+API base URLs live in `src/environments/environment.development.ts` as `apiUrl`, `jsonPlaceholderUrl`, `githubApiUrl`.
+
+### Routing
+
+`app.routes.ts` — default redirect goes to `dashboard`. Lazy loading via `loadComponent` is already in use for `dashboard` and `users`; `posts` and `search` are eager.
 
 ### Key Angular patterns used in this project
 
-- **Naming**: Angular 17+ style — no `Component` suffix on class names (`PostList` not `PostListComponent`); files use no `.component.ts` suffix (`post-list.ts`, `postservice.ts`)
+- **Naming**: Angular 17+ style — no `Component` suffix on class names (`PostList` not `PostListComponent`); files use no `.component.ts` suffix (`post-list.ts`). Services are named without a hyphen (`postservice.ts`, `userservice.ts`).
 - **Dependency injection**: use `inject()` function, not constructor injection
 - **HTTP**: `provideHttpClient(withFetch())` in `app.config.ts` — `withFetch()` is required for SSR compatibility; services return `Observable<T>`, never converted to Promises
 - **Models**: use a separate `*Payload` interface (e.g. `PostPayload`) for create/update requests that omit `id`; use a dual-model pattern for external APIs (`UserApiResponse` → trimmed `User`) with the mapping done in the service layer
 - **Templates**: prefer `async pipe` over manual `.subscribe()` to avoid memory leaks
 - **Reactivity**: Angular Signals (`signal()`, `computed()`) introduced in Day 8 alongside `BehaviorSubject`
-- **Routing**: eagerly loaded today; plan is to move to lazy-loaded routes via `loadComponent` as features grow
-- **Subscription cleanup**: `takeUntilDestroyed()` operator (Day 6+) instead of manual unsubscribe
+- **Subscription cleanup**: `takeUntilDestroyed()` — already in use in `PostForm`; standard for all new subscriptions
+
+### Known issues to fix before Day 6
+
+- **`src/app/core/services/todo.ts`**: The `todoApiUrl` template literal has a mixed quote (`';\`` at the end) — causes a runtime URL error.
+- **Environment imports**: All services import `environment.development` directly instead of `environment`. The convention is to import `environment` and let the Angular CLI swap the file at build time via `fileReplacements` in `angular.json`.
 
 ### SSR note
 
