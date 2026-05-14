@@ -1,5 +1,6 @@
 import { Post } from './../../../core/models/post';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { PostService } from '../../../core/services/postservice';
 import { AsyncPipe } from '@angular/common';
@@ -13,6 +14,7 @@ import { PostForm } from '../post-form/post-form';
 })
 export class PostList {
   private postService = inject(PostService);
+  private destroyRef = inject(DestroyRef);
 
   // Using async pipe — no manual subscribe, no memory leak
   posts$: Observable<Post[]> = this.postService.getAllPosts();
@@ -43,9 +45,11 @@ export class PostList {
     if(!confirm('delete this post?')){
       return;
     }
-    this.postService.deletePost(id).subscribe({
+    this.postService.deletePost(id).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: () => {
-        this.posts$ = this.postService.getAllPosts(); // Refresh list after delete
+        this.posts$ = this.postService.getAllPosts();
       },
       error: (error) => {
         console.error('Error deleting post:', error);

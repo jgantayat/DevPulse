@@ -69,36 +69,13 @@ export class PostForm implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.invalid) {
-      return;
-    }
+    if (this.form.invalid) return;
 
-    const payload = {
-      title: this.form.value.title!,
-      body: this.form.value.body!,
+    this.submitTrigger.next({
+      title:  this.form.value.title!,
+      body:   this.form.value.body!,
       userId: 1
-    };
-
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    const calls = this.editPost
-      ? this.postService.updatePost(this.editPost.id, payload)
-      : this.postService.createPost(payload);
-
-    calls.subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.form.reset();
-        this.saved.emit();
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = 'An error occurred while saving the post. Please try again.';
-        console.error('Error saving post:', err);
-      }
     });
-
   }
 
 }
