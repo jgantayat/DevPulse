@@ -39,18 +39,18 @@ npm test           # run unit tests with Vitest
 
 ## 10-Day Roadmap
 
-| Day | Topic |
-|-----|-------|
-| 01 | Project setup + first HTTP GET |
-| 02 | CRUD operations + typed responses |
-| 03 | `map`, `tap`, `filter`, `catchError` |
-| 04 | `switchMap` + `debounceTime` (live search) |
-| 05 | `forkJoin` + `mergeMap` (parallel calls) |
-| 06 | `exhaustMap` + `takeUntilDestroyed` |
-| 07 | HTTP interceptors (auth + logging) |
-| 08 | Signals + `BehaviorSubject` state |
-| 09 | Real GitHub API + pagination |
-| 10 | Lazy loading + deploy |
+| Day | Topic | Status |
+|-----|-------|--------|
+| 01 | Project setup + first HTTP GET | ✅ Done |
+| 02 | CRUD operations + typed responses | ✅ Done |
+| 03 | `map`, `tap`, `filter`, `catchError` | ✅ Done |
+| 04 | `switchMap` + `debounceTime` (live search) | ✅ Done |
+| 05 | `forkJoin` + `mergeMap` (parallel calls) | ✅ Done |
+| 06 | `exhaustMap` + `takeUntilDestroyed` | ✅ Done |
+| 07 | HTTP interceptors (auth + logging) | 🔲 Up next |
+| 08 | Signals + `BehaviorSubject` state | 🔲 Pending |
+| 09 | Real GitHub API + pagination | 🔲 Pending |
+| 10 | Lazy loading + deploy | 🔲 Pending |
 
 Per-day guides with code, concepts, and checkpoints are in `devpulse-plan/days/`.
 
@@ -69,20 +69,20 @@ API base URLs are configured in `src/environments/environment.ts`.
 ```
 src/app/
 ├── core/
-│   ├── models/         # TypeScript interfaces (Post, User, Todo, Repo)
-│   ├── services/       # HttpClient services
-│   └── interceptors/   # Auth + logging interceptors
+│   ├── models/         # Post, PostPayload, User, UserApiResponse, Todo, DashboardData
+│   ├── services/       # postservice, userservice, dashboard, todo
+│   └── interceptors/   # auth + logging interceptors (Day 7 — not yet built)
 ├── shared/
-│   └── components/     # LoadingSpinner, ErrorBanner, EmptyState
+│   └── components/     # error-banner, loading-spinner (scaffolded, not yet wired)
 ├── features/
-│   ├── posts/          # Days 1–2: CRUD
-│   ├── users/          # Day 3: map + catchError
-│   ├── search/         # Day 4: switchMap + debounce
-│   ├── dashboard/      # Day 5: forkJoin
-│   └── github/         # Day 9: GitHub API + pagination
-└── layout/             # Shell (sidebar + header)
+│   ├── posts/          # Days 1–2: PostList + PostForm — full CRUD ✅
+│   ├── users/          # Day 3: UserList — map + catchError ✅
+│   ├── search/         # Day 4: UserSearch — switchMap + debounceTime ✅
+│   ├── dashboard/      # Day 5: Dashboard — forkJoin + mergeMap ✅
+│   └── github/         # Day 9: GitHub API + pagination (not yet built)
+└── layout/             # Shell with sidebar + header (not yet built)
 ```
 
 ## Learning Log
 
-Daily reflections are tracked in `devpulse-plan/LEARNING_LOG.md`.
+Daily learning reflections live in `Learnings/` (e.g. `Learnings/day_05_learning.md`).
