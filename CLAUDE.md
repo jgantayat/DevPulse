@@ -37,6 +37,7 @@ npm run serve:ssr:DevPulse
 ```
 src/app/
 ├── core/
+│   ├── interceptors/   # auth-interceptors.ts, logging-interceptor.ts, global-error-interceptor.ts
 │   ├── models/         # post.ts, user.ts, todo.ts (Post/PostPayload, User/UserApiResponse, Todo/DashboardData)
 │   └── services/       # postservice.ts, userservice.ts, dashboard.ts, todo.ts
 ├── shared/
@@ -58,11 +59,11 @@ src/app/
 | JSONPlaceholder | `https://jsonplaceholder.typicode.com` | users + todos (read-only) |
 | GitHub REST API | `https://api.github.com` | repo search + pagination (Day 9) |
 
-API base URLs live in `src/environments/environment.development.ts` as `apiUrl`, `jsonPlaceholderUrl`, `githubApiUrl`.
+API base URLs live in `src/environments/environment.development.ts` as `apiUrl`, `jsonPlaceholderUrl`, `githubApiUrl`. Both `environment.ts` and `environment.development.ts` exist; always import from `environment` (not `environment.development`) and let the Angular CLI swap files via `fileReplacements` in `angular.json`.
 
 ### Routing
 
-`app.routes.ts` — default redirect goes to `dashboard`. Lazy loading via `loadComponent` is already in use for `dashboard` and `users`; `posts` and `search` are eager.
+`app.routes.ts` — default redirect goes to `posts`. Lazy loading via `loadComponent` is already in use for `dashboard` and `users`; `posts` and `search` are eager.
 
 ### Key Angular patterns used in this project
 
@@ -74,10 +75,23 @@ API base URLs live in `src/environments/environment.development.ts` as `apiUrl`,
 - **Reactivity**: Angular Signals (`signal()`, `computed()`) introduced in Day 8 alongside `BehaviorSubject`
 - **Subscription cleanup**: `takeUntilDestroyed()` — already in use in `PostForm`; standard for all new subscriptions
 
-### Known issues to fix before Day 6
+### HTTP Interceptors (Day 7 — scaffolded, not yet activated)
 
-- **`src/app/core/services/todo.ts`**: The `todoApiUrl` template literal has a mixed quote (`';\`` at the end) — causes a runtime URL error.
-- **Environment imports**: All services import `environment.development` directly instead of `environment`. The convention is to import `environment` and let the Angular CLI swap the file at build time via `fileReplacements` in `angular.json`.
+Three functional interceptors exist in `src/app/core/interceptors/`:
+
+| File | Export | Purpose |
+|---|---|---|
+| `auth-interceptors.ts` | `authInterceptor` | Adds `Authorization: Bearer <token>` header to `localhost:3000` requests only |
+| `logging-interceptor.ts` | `loggingInterceptor` | Logs request start, response status, and duration using a random request ID |
+| `global-error-interceptor.ts` | `errorInterceptor` | Handles 401 and network errors (status 0) globally via `catchError` |
+
+Intended registration order in `withInterceptors([loggingInterceptor, authInterceptor, errorInterceptor])` — logging wraps the entire chain; auth adds headers on the way out; error catches on the way back. The `withInterceptors([...])` call is currently commented out in `app.config.ts` and needs to be uncommented to activate them.
+
+### Known issues
+
+- **`src/app/core/services/todo.ts`**: The `todoApiUrl` template literal has a mixed quote (`';\`` at the end) — causes a runtime URL error. Also, `HttpClient` is assigned to a property named `HttpClient` (should be camelCase `httpClient`).
+- **Environment imports**: Some services still import `environment.development` directly. Change these to import from `environment`.
+- **`app.routes.ts`**: The `DashboardComponent` export name in the lazy-loaded dashboard route does not match the actual class name — verify the export name in `dashboard.ts` before wiring up.
 
 ### SSR note
 
