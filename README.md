@@ -47,8 +47,8 @@ npm test           # run unit tests with Vitest
 | 04 | `switchMap` + `debounceTime` (live search) | ✅ Done |
 | 05 | `forkJoin` + `mergeMap` (parallel calls) | ✅ Done |
 | 06 | `exhaustMap` + `takeUntilDestroyed` | ✅ Done |
-| 07 | HTTP interceptors (auth + logging) | 🔲 Up next |
-| 08 | Signals + `BehaviorSubject` state | 🔲 Pending |
+| 07 | HTTP interceptors (auth + logging) | ✅ Done |
+| 08 | Signals + `BehaviorSubject` state | 🔲 Up next |
 | 09 | Real GitHub API + pagination | 🔲 Pending |
 | 10 | Lazy loading + deploy | 🔲 Pending |
 
@@ -71,7 +71,7 @@ src/app/
 ├── core/
 │   ├── models/         # Post, PostPayload, User, UserApiResponse, Todo, DashboardData
 │   ├── services/       # postservice, userservice, dashboard, todo
-│   └── interceptors/   # auth + logging interceptors (Day 7 — not yet built)
+│   └── interceptors/   # auth, logging, global-error interceptors ✅
 ├── shared/
 │   └── components/     # error-banner, loading-spinner (scaffolded, not yet wired)
 ├── features/
