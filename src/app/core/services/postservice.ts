@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { Observable } from 'rxjs';
 import { Post, PostPayload } from '../models/post';
@@ -13,7 +13,21 @@ export class PostService {
   private apiUrl = `${environment.apiUrl}/posts`;
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-   
+  //Signal based state
+  private _posts = signal<Post[]>([]);
+  private _isLoading = signal(false);
+  private _error = signal<string | null>(null);
+
+  //Read-only signal
+  readonly posts = this._posts.asReadonly();
+  readonly isLoading = this._isLoading.asReadonly();
+  readonly error = this._error.asReadonly();
+
+  //computed: derived state
+  readonly postCount = computed(() => this._posts().length);
+  readonly hasPosts = computed(() => this._posts().length > 0);
+  readonly myPosts = computed(() => this._posts().filter(p => p.userId === 1));
+
   getAllPosts(): Observable<Post[]> {
     return this.httpClient.get<Post[]>(this.apiUrl);
   }
