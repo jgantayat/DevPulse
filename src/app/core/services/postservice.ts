@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Post, PostPayload } from '../models/post';
 
 @Injectable({
@@ -28,8 +28,25 @@ export class PostService {
   readonly hasPosts = computed(() => this._posts().length > 0);
   readonly myPosts = computed(() => this._posts().filter(p => p.userId === 1));
 
-  getAllPosts(): Observable<Post[]> {
-    return this.httpClient.get<Post[]>(this.apiUrl);
+  constructor(){
+    effect(()=>{
+      console.log('[PostService] posts count:', this._posts().length);
+      console.log('[PostService] loading:', this._isLoading());
+    });
+  }
+  getAllPosts(): void {
+    this._isLoading.set(true);
+    this._error.set(null);
+    this.httpClient.get<Post[]>(this.apiUrl).subscribe({
+      next: (posts) =>{
+        this._posts.set(posts);
+        this._isLoading.set(false);
+      },
+      error: (err)=>{
+        this._error.set('Failed to load Posts.');
+        this._isLoading.set(false);
+      }
+    });
   }
 
   getPostById(id: number): Observable<Post> {
@@ -39,17 +56,32 @@ export class PostService {
   createPost(payload: PostPayload): Observable<Post> {
     return this.httpClient.post<Post>(this.apiUrl, payload, {
       headers: this.headers,
-    });
+    }).pipe(
+      tap(newPost =>{
+        this._posts.update(current => [...current, newPost]);
+      })
+    );
   }
 
   updatePost(id: number, payload: PostPayload): Observable<Post> {
     return this.httpClient.put<Post>(`${this.apiUrl}/${id}`, payload, {
       headers: this.headers,
-    });
+    }).pipe(
+      tap(updated => {
+        this._posts.update(current =>
+          current.map(p => p.id === id ? updated : p)
+        );
+      })
+    );
   }
 
   deletePost(id: number): Observable<void> {
-    return this.httpClient.delete<void>(`${this.apiUrl}/${id}`);
+    return this.httpClient.delete<void>(`${this.apiUrl}/${id}`)
+    .pipe(
+      tap(()=>{
+        this._posts.update(current => current.filter(p => p.id !== id));
+      })
+    );
   }
 
 }
