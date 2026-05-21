@@ -1,29 +1,25 @@
 import { Post } from './../../../core/models/post';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
 import { PostService } from '../../../core/services/postservice';
-import { AsyncPipe } from '@angular/common';
 import { PostForm } from '../post-form/post-form';
 
 @Component({
   selector: 'app-post-list',
-  imports: [AsyncPipe, PostForm],
+  imports: [PostForm],
   templateUrl: './post-list.html',
   styleUrl: './post-list.css',
 })
-export class PostList {
-  private postService = inject(PostService);
+export class PostList implements OnInit {
+  postService = inject(PostService);
   private destroyRef = inject(DestroyRef);
 
-  // Using async pipe — no manual subscribe, no memory leak
-  posts$: Observable<Post[]> = this.postService.getAllPosts();
   showForm = false;
   editingPost: Post | null = null;
   deleteError='';
 
-  constructor(){
-    
+  ngOnInit(): void {
+     this.postService.getAllPosts();
   }
 
   openCreatForm(){
@@ -38,7 +34,7 @@ export class PostList {
 
   onFormSaved(){
     this.showForm = false;
-    this.posts$ = this.postService.getAllPosts(); // Refresh list after save
+    this.postService.getAllPosts(); // Refresh list after save
   }
   
   onFormCancelled(id: number){  
@@ -49,7 +45,7 @@ export class PostList {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
-        this.posts$ = this.postService.getAllPosts();
+        this.postService.getAllPosts();
       },
       error: (error) => {
         console.error('Error deleting post:', error);
