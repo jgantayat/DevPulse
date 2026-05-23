@@ -48,7 +48,7 @@ npm test           # run unit tests with Vitest
 | 05 | `forkJoin` + `mergeMap` (parallel calls) | ✅ Done |
 | 06 | `exhaustMap` + `takeUntilDestroyed` | ✅ Done |
 | 07 | HTTP interceptors (auth + logging) | ✅ Done |
-| 08 | Signals + `BehaviorSubject` state | 🔲 Up next |
+| 08 | Signals + `BehaviorSubject` state | ✅ Done |
 | 09 | Real GitHub API + pagination | 🔲 Pending |
 | 10 | Lazy loading + deploy | 🔲 Pending |
 
@@ -127,6 +127,15 @@ src/app/
 - **`errorInterceptor`** — `catchError` handler for 401 (token expiry warning) and status 0 (network unreachable); rethrows so individual services can still handle errors locally
 - All three imported in `app.config.ts`; `withInterceptors([loggingInterceptor, authInterceptor, errorInterceptor])` is ready to uncomment
 - **Concepts:** `HttpInterceptorFn`, `req.clone()`, `withInterceptors`, `tap` on response stream, `HttpResponse` type guard, `catchError`, `HttpErrorResponse`, interceptor chain order
+
+### Day 08 — Signals + State Management
+- `PostService` migrated from Observable-only to signal-based state: private writable signals `_posts`, `_isLoading`, `_error` exposed as read-only via `.asReadonly()`
+- `computed()` derives `postCount`, `hasPosts`, and `myPosts` (filtered to `userId === 1`) from the posts signal — no extra subscriptions needed
+- `effect()` in the constructor logs post count and loading state whenever either signal changes — reactive side-effect without a subscription
+- `getAllPosts()` changed to `void` return; it drives the signal update pipeline directly (`.set()` on next, `.set()` on error)
+- Mutation methods (`createPost`, `updatePost`, `deletePost`) still return `Observable<T>` but use `tap()` to call `_posts.update()` — single source of truth updated in the service, not the component
+- `PostList` reads `postService.posts`, `postService.isLoading`, and `postService.error` directly as signals — no `async` pipe or manual subscribe needed for list rendering
+- **Concepts:** `signal()`, `computed()`, `effect()`, `.asReadonly()`, `.update()`, `.set()`, mixing Signals with RxJS `tap()`
 
 ## Learning Log
 
